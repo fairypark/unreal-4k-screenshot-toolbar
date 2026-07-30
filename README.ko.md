@@ -6,6 +6,8 @@
 **3840 × 2160 PNG**로 저장해 주는 가벼운 에디터 플러그인입니다. 툴바의
 **4K Shot** 버튼을 누르거나 **F12**를 누르면 바로 촬영됩니다.
 
+![Unreal Editor의 4K Shot 툴바 버튼과 F12 단축키](Docs/Images/4k-shot-toolbar.png)
+
 ## 주요 기능
 
 - 활성 Level Editor 뷰포트를 한 번에 4K로 캡처

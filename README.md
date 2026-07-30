@@ -6,6 +6,8 @@ A small, source-available Unreal Editor plugin that captures the active Level
 Editor viewport as an exact **3840 × 2160 PNG**. Use the **4K Shot** toolbar
 button or press **F12**.
 
+![4K Shot toolbar button and F12 shortcut in Unreal Editor](Docs/Images/4k-shot-toolbar.png)
+
 ## Features
 
 - One-click 4K capture from the active Level Editor viewport

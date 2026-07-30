@@ -6,6 +6,8 @@ or F12.
 Unreal Editor에서 버튼 한 번 또는 F12로 활성 뷰포트의 깔끔한 4K 이미지를
 저장할 수 있는 작은 오픈소스 플러그인입니다.
 
+![4K Shot toolbar button and F12 shortcut in Unreal Editor](https://raw.githubusercontent.com/fairypark/unreal-4k-screenshot-toolbar/main/Docs/Images/4k-shot-toolbar.png)
+
 ## Highlights
 
 - Exact 3840 × 2160 PNG capture
