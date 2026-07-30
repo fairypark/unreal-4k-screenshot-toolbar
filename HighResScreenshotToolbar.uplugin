@@ -1,0 +1,27 @@
+{
+	"FileVersion": 3,
+	"Version": 10000,
+	"VersionName": "1.0.0",
+	"FriendlyName": "4K Screenshot Toolbar",
+	"Description": "Capture the active Level Editor viewport as an exact 3840 x 2160 PNG with one click or F12.",
+	"Category": "Editor",
+	"CreatedBy": "fairypark",
+	"CreatedByURL": "https://github.com/fairypark",
+	"DocsURL": "https://github.com/fairypark/unreal-4k-screenshot-toolbar#readme",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/fairypark/unreal-4k-screenshot-toolbar/issues",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "HighResScreenshotToolbar",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit",
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}
