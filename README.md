@@ -27,8 +27,14 @@ On Windows Editor, the default location is:
 
 ## Compatibility
 
-- Tested with Unreal Engine 5.8 on Windows
-- Other Unreal Engine 5.x versions have not yet been verified
+| Unreal Engine | Windows status |
+| --- | --- |
+| 5.8.1 | Build verified and functionally tested |
+| 5.7.4 | Build verified |
+| 5.0.3 | Build verified |
+
+Unreal Engine 5.5.4 is not currently advertised as supported because the local
+engine installation fails inside UnrealBuildTool before plugin compilation.
 
 ## Installation
 
@@ -57,6 +63,9 @@ Activate the Level Editor viewport, then either:
 
 To change the shortcut, open `Edit > Keyboard Shortcuts` (`Ctrl+Alt+K`), search
 for `4K Shot`, and assign a different key.
+
+For complete usage and troubleshooting details, see
+[Documentation](Documentation.md).
 
 ## Notes
 
