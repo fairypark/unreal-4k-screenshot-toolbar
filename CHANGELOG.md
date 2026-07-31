@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 - 2026-07-31
+
+- Added Unreal Engine 5.0 compatibility
+- Verified independent Win64 plugin builds with Unreal Engine 5.0.3, 5.7.4, and 5.8.1
+- Added offline documentation and Fab submission materials
+
 ## 1.0.0 - 2026-07-31
 
 Initial public release.

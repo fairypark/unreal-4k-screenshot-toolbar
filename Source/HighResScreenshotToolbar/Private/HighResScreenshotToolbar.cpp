@@ -10,6 +10,7 @@
 #include "LevelEditor.h"
 #include "LevelEditorViewport.h"
 #include "Misc/Paths.h"
+#include "Runtime/Launch/Resources/Version.h"
 #include "ToolMenus.h"
 #include "UnrealClient.h"
 #include "Widgets/Notifications/SNotificationList.h"
@@ -32,7 +33,9 @@ namespace HighResScreenshotToolbar
 			&& GEditor->GetLevelViewportClients().Contains(PendingViewportClient))
 		{
 			PendingViewportClient->SetGameView(false);
+#if ENGINE_MAJOR_VERSION > 5 || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1)
 			PendingViewportClient->ShowWidget(bPreviousShowWidget);
+#endif
 			PendingViewportClient->Invalidate();
 		}
 
@@ -175,7 +178,9 @@ void FHighResScreenshotToolbarModule::Take4KScreenshot()
 	HighResScreenshotToolbar::PendingScreenshotPath.Reset();
 	HighResScreenshotToolbar::PendingViewportClient = ViewportClient;
 	HighResScreenshotToolbar::bChangedGameView = !ViewportClient->IsInGameView();
+#if ENGINE_MAJOR_VERSION > 5 || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1)
 	HighResScreenshotToolbar::bPreviousShowWidget = ViewportClient->GetShowWidget();
+#endif
 	if (HighResScreenshotToolbar::bChangedGameView)
 	{
 		ViewportClient->SetGameView(true);

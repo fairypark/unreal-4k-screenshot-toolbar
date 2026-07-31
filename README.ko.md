@@ -26,8 +26,14 @@ Windows Editor에서 스크린샷은 기본적으로 다음 폴더에 저장됩�
 
 ## 호환성
 
-- Unreal Engine 5.8 / Windows에서 테스트 완료
-- 다른 Unreal Engine 5.x 버전은 아직 검증하지 않았습니다
+| Unreal Engine | Windows 검증 상태 |
+| --- | --- |
+| 5.8.1 | 독립 빌드 및 실제 기능 테스트 완료 |
+| 5.7.4 | 독립 빌드 완료 |
+| 5.0.3 | 독립 빌드 완료 |
+
+Unreal Engine 5.5.4는 로컬 엔진의 UnrealBuildTool이 플러그인 컴파일 전에
+내부 오류로 중단되어 현재 지원 버전으로 표시하지 않습니다.
 
 ## 설치 방법
 
@@ -56,6 +62,8 @@ Level Editor 뷰포트를 활성화한 뒤 다음 중 하나를 실행합니다.
 
 단축키를 바꾸려면 `편집 > 키보드 단축키` (`Ctrl+Alt+K`)를 열고
 `4K Shot`을 검색해 원하는 키를 지정하면 됩니다.
+
+전체 사용법과 문제 해결 방법은 [Documentation](Documentation.md)을 참고하세요.
 
 ## 라이선스
 
