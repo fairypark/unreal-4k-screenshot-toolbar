@@ -1,4 +1,20 @@
-# 4K Screenshot Toolbar v1.0.0
+# Release Notes
+
+## 4K Screenshot Toolbar v1.1.0
+
+Choose Full HD, QHD, Ultrawide QHD, 4K UHD, 5K, or 8K UHD from Editor
+Preferences, or select `Custom` and enter an exact width and height. Both the
+toolbar button and F12 shortcut use the saved setting. 4K UHD remains the
+default.
+
+Verified independent Win64 plugin builds:
+
+- Unreal Engine 5.8.1
+- Unreal Engine 5.7.4
+- Unreal Engine 5.5.4
+- Unreal Engine 5.0.3
+
+## 4K Screenshot Toolbar v1.0.0
 
 Capture a clean 4K image from the active Unreal Editor viewport with one click
 or F12.

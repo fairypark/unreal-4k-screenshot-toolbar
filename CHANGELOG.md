@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 - 2026-08-01
+
+- Added a resolution preset selector under Editor Preferences
+- Added Full HD, QHD, Ultrawide QHD, 4K, 5K, and 8K presets
+- Added custom width and height fields with safe 64–16384 limits
+- Kept 4K UHD as the default for existing workflows
+- Verified Unreal Engine 5.5.4 compilation, linking, and Editor plugin loading
+
 ## 1.0.1 - 2026-07-31
 
 - Added Unreal Engine 5.0 compatibility

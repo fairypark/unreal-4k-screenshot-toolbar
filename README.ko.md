@@ -2,15 +2,17 @@
 
 [English README](README.md)
 
-**4K Screenshot Toolbar**는 Unreal Editor의 활성 레벨 뷰포트를 정확한
-**3840 × 2160 PNG**로 저장해 주는 가벼운 에디터 플러그인입니다. 툴바의
-**4K Shot** 버튼을 누르거나 **F12**를 누르면 바로 촬영됩니다.
+**4K Screenshot Toolbar**는 Unreal Editor의 활성 레벨 뷰포트를 고해상도
+PNG로 저장해 주는 가벼운 에디터 플러그인입니다. 표준 해상도 프리셋을
+고르거나 사용자 지정 크기를 입력한 뒤 **4K Shot** 버튼 또는 **F12**로 촬영합니다.
 
 ![Unreal Editor의 4K Shot 툴바 버튼과 F12 단축키](Docs/Images/4k-shot-toolbar.png)
 
 ## 주요 기능
 
-- 활성 Level Editor 뷰포트를 한 번에 4K로 캡처
+- 활성 Level Editor 뷰포트를 한 번에 고해상도로 캡처
+- Full HD, QHD, Ultrawide QHD, 4K, 5K, 8K 프리셋 제공
+- 64~16384 범위의 사용자 지정 너비와 높이 지원
 - 기본 단축키 F12 제공 및 Unreal Editor에서 자유롭게 변경 가능
 - 촬영 순간 Game View를 자동으로 적용해 에디터 아이콘과 기즈모 숨김
 - 촬영이 끝나면 기존 뷰포트 상태 자동 복원
@@ -30,15 +32,18 @@ Windows Editor에서 스크린샷은 기본적으로 다음 폴더에 저장됩�
 | --- | --- |
 | 5.8.1 | 독립 빌드 및 실제 기능 테스트 완료 |
 | 5.7.4 | 독립 빌드 완료 |
+| 5.5.4 | 독립 빌드 및 Editor 플러그인 로드 테스트 완료 |
 | 5.0.3 | 독립 빌드 완료 |
 
-Unreal Engine 5.5.4는 로컬 엔진의 UnrealBuildTool이 플러그인 컴파일 전에
-내부 오류로 중단되어 현재 지원 버전으로 표시하지 않습니다.
+로컬 Unreal Engine 5.5.4에는 이 플러그인과 무관한 `VisualStudioTools` Rules
+등록 문제가 있었습니다. 해당 엔진 플러그인만 제외한 정식 5.5
+UnrealBuildTool에서 컴파일과 링크를 통과했고, Editor가 결과 플러그인을
+정상적으로 마운트하는 것까지 확인했습니다.
 
 ## 설치 방법
 
 1. [최신 릴리스](https://github.com/fairypark/unreal-4k-screenshot-toolbar/releases/latest)에서
-   `HighResScreenshotToolbar-v1.0.0-UE5.8-Win64.zip`을 내려받습니다.
+   사용하는 엔진 버전에 맞는 ZIP을 내려받습니다.
 2. 압축 안의 `HighResScreenshotToolbar` 폴더를 프로젝트의 `Plugins` 폴더에 넣습니다.
 
    ```text
@@ -49,9 +54,9 @@ Unreal Engine 5.5.4는 로컬 엔진의 UnrealBuildTool이 플러그인 컴파�
 4. 필요하면 `편집 > 플러그인`에서 **4K Screenshot Toolbar**를 활성화합니다.
 5. 안내에 따라 에디터를 재시작합니다.
 
-바로 설치 가능한 패키지는 Unreal Engine 5.8 / Win64용이며 소스도 함께
-포함합니다. 다른 엔진 버전에서는 저장소를 복제하거나 GitHub 소스 압축을
-내려받아 해당 버전에 맞는 C++ 환경으로 빌드해야 합니다.
+바로 설치 가능한 Win64 패키지는 검증된 Unreal Engine 버전별로 따로
+제공되며 소스도 함께 포함합니다. 사용 중인 엔진 버전과 정확히 일치하는
+ZIP을 사용하세요.
 
 ## 사용 방법
 
@@ -59,6 +64,12 @@ Level Editor 뷰포트를 활성화한 뒤 다음 중 하나를 실행합니다.
 
 - 툴바의 **4K Shot** 버튼 클릭
 - **F12** 누르기
+
+저장 해상도를 바꾸려면
+`편집 > 에디터 개인 설정 > 플러그인 > 4K Screenshot Toolbar`를 엽니다.
+프리셋을 고르거나 `Custom`을 선택해 너비와 높이를 입력할 수 있습니다.
+기본값은 `4K UHD (3840 x 2160)`이며 변경한 값은 에디터를 재시작하지 않아도
+다음 촬영부터 바로 적용됩니다.
 
 단축키를 바꾸려면 `편집 > 키보드 단축키` (`Ctrl+Alt+K`)를 열고
 `4K Shot`을 검색해 원하는 키를 지정하면 됩니다.

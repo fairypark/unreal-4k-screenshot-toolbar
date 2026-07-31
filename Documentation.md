@@ -3,7 +3,7 @@
 ## Overview
 
 4K Screenshot Toolbar is an Editor-only Unreal Engine code plugin. It captures
-the active Level Editor viewport as an exact 3840 × 2160 PNG through either the
+the active Level Editor viewport as an exact-size PNG through either the
 **4K Shot** toolbar button or the configurable **F12** shortcut.
 
 The plugin temporarily enables Game View when needed so editor icons and
@@ -20,12 +20,13 @@ viewport state after Unreal Engine finishes processing the screenshot.
 | --- | --- |
 | 5.8.1 | Independent plugin build and functional Editor test |
 | 5.7.4 | Independent plugin build |
+| 5.5.4 | Independent plugin build and Editor plugin-load test |
 | 5.0.3 | Independent plugin build |
 
-Unreal Engine 5.5.4 is not advertised as supported because the available local
-installation fails inside UnrealBuildTool before plugin compilation. This is an
-engine/toolchain environment failure rather than a confirmed plugin source
-failure.
+The local Unreal Engine 5.5.4 installation contains a broken
+`VisualStudioTools` rules registration. Excluding that unrelated engine plugin
+allowed the stock 5.5 UnrealBuildTool to compile and link this plugin, followed
+by a successful Editor plugin-load test.
 
 ## Installation
 
@@ -86,9 +87,26 @@ To change it:
 The shortcut is registered in the Level Editor command context. It does not add
 an input binding to packaged games.
 
+## Capture resolution
+
+Open `Edit > Editor Preferences > Plugins > 4K Screenshot Toolbar` and choose:
+
+- Full HD (1920 x 1080)
+- QHD (2560 x 1440)
+- Ultrawide QHD (3440 x 1440)
+- 4K UHD (3840 x 2160), the default
+- 5K (5120 x 2880)
+- 8K UHD (7680 x 4320)
+- Custom
+
+Selecting `Custom` enables the width and height fields. Each custom dimension
+is limited to 64–16384 pixels. The setting is stored in the project's local
+Editor user settings and is used immediately by both the toolbar button and F12
+shortcut; no editor restart is required after changing it.
+
 ## Capture behavior
 
-- Output resolution: exactly 3840 × 2160
+- Output resolution: the selected preset or exact custom dimensions
 - Output format: PNG
 - Capture target: active Level Editor viewport
 - Editor icons and transform widgets: hidden through temporary Game View

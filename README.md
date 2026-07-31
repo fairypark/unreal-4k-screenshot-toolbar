@@ -3,14 +3,16 @@
 [한국어 소개](README.ko.md)
 
 A small, source-available Unreal Editor plugin that captures the active Level
-Editor viewport as an exact **3840 × 2160 PNG**. Use the **4K Shot** toolbar
-button or press **F12**.
+Editor viewport as a high-resolution PNG. Choose a standard resolution preset
+or enter a custom size, then use the **4K Shot** toolbar button or press **F12**.
 
 ![4K Shot toolbar button and F12 shortcut in Unreal Editor](Docs/Images/4k-shot-toolbar.png)
 
 ## Features
 
-- One-click 4K capture from the active Level Editor viewport
+- One-click high-resolution capture from the active Level Editor viewport
+- Full HD, QHD, Ultrawide QHD, 4K, 5K, and 8K presets
+- Custom width and height support from 64 to 16384 pixels
 - F12 default shortcut, editable in Unreal Editor's Keyboard Shortcuts
 - Temporarily enables Game View to hide editor icons and transform widgets
 - Restores the viewport state automatically after capture
@@ -31,14 +33,17 @@ On Windows Editor, the default location is:
 | --- | --- |
 | 5.8.1 | Build verified and functionally tested |
 | 5.7.4 | Build verified |
+| 5.5.4 | Build and Editor plugin load verified |
 | 5.0.3 | Build verified |
 
-Unreal Engine 5.5.4 is not currently advertised as supported because the local
-engine installation fails inside UnrealBuildTool before plugin compilation.
+The local Unreal Engine 5.5.4 installation had an unrelated broken
+`VisualStudioTools` rules registration. With that engine plugin excluded, the
+stock 5.5 UnrealBuildTool compiled and linked this plugin successfully, and the
+Editor mounted the resulting plugin.
 
 ## Installation
 
-1. Download `HighResScreenshotToolbar-v1.0.0-UE5.8-Win64.zip` from the
+1. Download the ZIP matching your engine version from the
    [latest release](https://github.com/fairypark/unreal-4k-screenshot-toolbar/releases/latest).
 2. Extract `HighResScreenshotToolbar` into your project's `Plugins` directory:
 
@@ -50,9 +55,9 @@ engine installation fails inside UnrealBuildTool before plugin compilation.
 4. Enable **4K Screenshot Toolbar** in `Edit > Plugins` if it is not already enabled.
 5. Restart the editor when requested.
 
-The ready-to-install package is built for Unreal Engine 5.8 on Win64 and also
-includes the source. Users of another engine version should clone the repository
-or download GitHub's source archive and build it with a compatible C++ toolchain.
+Ready-to-install Win64 packages are built separately for each verified Unreal
+Engine version and also include the source. Use the ZIP matching your exact
+engine version.
 
 ## Usage
 
@@ -60,6 +65,12 @@ Activate the Level Editor viewport, then either:
 
 - click **4K Shot** on the Level Editor toolbar, or
 - press **F12**.
+
+To change the capture resolution, open
+`Edit > Editor Preferences > Plugins > 4K Screenshot Toolbar`. Select a preset,
+or choose `Custom` to enable the width and height fields. The default is
+`4K UHD (3840 x 2160)`. Changes apply to the next capture without restarting
+the editor.
 
 To change the shortcut, open `Edit > Keyboard Shortcuts` (`Ctrl+Alt+K`), search
 for `4K Shot`, and assign a different key.

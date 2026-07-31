@@ -2,11 +2,13 @@
 
 #include "HighResScreenshotToolbar.h"
 #include "HighResScreenshotToolbarCommands.h"
+#include "HighResScreenshotToolbarSettings.h"
 #include "HighResScreenshotToolbarStyle.h"
 
 #include "Editor.h"
 #include "Framework/Notifications/NotificationManager.h"
 #include "HighResScreenshot.h"
+#include "ISettingsModule.h"
 #include "LevelEditor.h"
 #include "LevelEditorViewport.h"
 #include "Misc/Paths.h"
@@ -21,7 +23,7 @@ namespace HighResScreenshotToolbar
 {
 	FDelegateHandle ScreenshotCapturedHandle;
 	FDelegateHandle ScreenshotProcessedHandle;
-	bool bWaitingFor4KShot = false;
+	bool bWaitingForScreenshot = false;
 	FString PendingScreenshotPath;
 	FLevelEditorViewportClient* PendingViewportClient = nullptr;
 	bool bChangedGameView = false;
@@ -46,7 +48,7 @@ namespace HighResScreenshotToolbar
 
 	void HandleScreenshotCaptured(int32, int32, const TArray<FColor>&)
 	{
-		if (!bWaitingFor4KShot)
+		if (!bWaitingForScreenshot)
 		{
 			return;
 		}
@@ -56,18 +58,18 @@ namespace HighResScreenshotToolbar
 
 	void HandleScreenshotProcessed()
 	{
-		if (!bWaitingFor4KShot)
+		if (!bWaitingForScreenshot)
 		{
 			return;
 		}
 
-		bWaitingFor4KShot = false;
+		bWaitingForScreenshot = false;
 		RestoreViewportState();
 		const bool bSaved = !PendingScreenshotPath.IsEmpty() && FPaths::FileExists(PendingScreenshotPath);
 
 		if (!bSaved)
 		{
-			FNotificationInfo Info(LOCTEXT("CaptureWriteFailed", "4K Shot failed: the output file was not created."));
+			FNotificationInfo Info(LOCTEXT("CaptureWriteFailed", "Screenshot failed: the output file was not created."));
 			Info.bFireAndForget = true;
 			Info.ExpireDuration = 10.0f;
 			Info.bUseSuccessFailIcons = true;
@@ -109,7 +111,7 @@ namespace HighResScreenshotToolbar
 			ScreenshotProcessedHandle.Reset();
 		}
 
-		bWaitingFor4KShot = false;
+		bWaitingForScreenshot = false;
 		PendingScreenshotPath.Reset();
 		RestoreViewportState();
 	}
@@ -121,14 +123,15 @@ void FHighResScreenshotToolbarModule::StartupModule()
 	FHighResScreenshotToolbarStyle::ReloadTextures();
 	FHighResScreenshotToolbarCommands::Register();
 	HighResScreenshotToolbar::RegisterScreenshotDelegates();
+	RegisterSettings();
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>(TEXT("LevelEditor"));
 	PluginCommands = LevelEditorModule.GetGlobalLevelEditorActions();
 
 	PluginCommands->MapAction(
 		FHighResScreenshotToolbarCommands::Get().PluginAction,
-		FExecuteAction::CreateRaw(this, &FHighResScreenshotToolbarModule::Take4KScreenshot),
-		FCanExecuteAction::CreateRaw(this, &FHighResScreenshotToolbarModule::CanTake4KScreenshot));
+		FExecuteAction::CreateRaw(this, &FHighResScreenshotToolbarModule::TakeScreenshot),
+		FCanExecuteAction::CreateRaw(this, &FHighResScreenshotToolbarModule::CanTakeScreenshot));
 
 	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FHighResScreenshotToolbarModule::RegisterMenus));
 }
@@ -136,6 +139,7 @@ void FHighResScreenshotToolbarModule::StartupModule()
 void FHighResScreenshotToolbarModule::ShutdownModule()
 {
 	HighResScreenshotToolbar::UnregisterScreenshotDelegates();
+	UnregisterSettings();
 	UToolMenus::UnRegisterStartupCallback(this);
 	UToolMenus::UnregisterOwner(this);
 	if (PluginCommands.IsValid())
@@ -147,12 +151,12 @@ void FHighResScreenshotToolbarModule::ShutdownModule()
 	FHighResScreenshotToolbarCommands::Unregister();
 }
 
-void FHighResScreenshotToolbarModule::Take4KScreenshot()
+void FHighResScreenshotToolbarModule::TakeScreenshot()
 {
 	FLevelEditorViewportClient* ViewportClient = GCurrentLevelEditingViewportClient;
 	if (ViewportClient == nullptr)
 	{
-		FNotificationInfo Info(LOCTEXT("NoActiveViewport", "4K Shot failed: no active Level Editor viewport."));
+		FNotificationInfo Info(LOCTEXT("NoActiveViewport", "Screenshot failed: no active Level Editor viewport."));
 		Info.ExpireDuration = 4.0f;
 		if (TSharedPtr<SNotificationItem> Notification = FSlateNotificationManager::Get().AddNotification(Info))
 		{
@@ -161,11 +165,17 @@ void FHighResScreenshotToolbarModule::Take4KScreenshot()
 		return;
 	}
 
-	// Reset optional screenshot flags and request an exact 3840 x 2160 PNG.
-	const FString CaptureArguments(TEXT("3840x2160 0 0 0 0 0 0 0 1"));
+	const FIntPoint CaptureResolution =
+		GetDefault<UHighResScreenshotToolbarSettings>()->GetCaptureResolution();
+
+	// Reset optional screenshot flags and request the configured exact PNG resolution.
+	const FString CaptureArguments = FString::Printf(
+		TEXT("%dx%d 0 0 0 0 0 0 0 1"),
+		CaptureResolution.X,
+		CaptureResolution.Y);
 	if (!GetHighResScreenshotConfig().ParseConsoleCommand(CaptureArguments, *GLog))
 	{
-		FNotificationInfo Info(LOCTEXT("InvalidCaptureConfig", "4K Shot failed: the screenshot configuration was rejected."));
+		FNotificationInfo Info(LOCTEXT("InvalidCaptureConfig", "Screenshot failed: the configured resolution was rejected."));
 		Info.ExpireDuration = 4.0f;
 		if (TSharedPtr<SNotificationItem> Notification = FSlateNotificationManager::Get().AddNotification(Info))
 		{
@@ -174,7 +184,7 @@ void FHighResScreenshotToolbarModule::Take4KScreenshot()
 		return;
 	}
 
-	HighResScreenshotToolbar::bWaitingFor4KShot = true;
+	HighResScreenshotToolbar::bWaitingForScreenshot = true;
 	HighResScreenshotToolbar::PendingScreenshotPath.Reset();
 	HighResScreenshotToolbar::PendingViewportClient = ViewportClient;
 	HighResScreenshotToolbar::bChangedGameView = !ViewportClient->IsInGameView();
@@ -188,9 +198,36 @@ void FHighResScreenshotToolbarModule::Take4KScreenshot()
 	ViewportClient->TakeHighResScreenShot();
 }
 
-bool FHighResScreenshotToolbarModule::CanTake4KScreenshot() const
+bool FHighResScreenshotToolbarModule::CanTakeScreenshot() const
 {
-	return GCurrentLevelEditingViewportClient != nullptr && !HighResScreenshotToolbar::bWaitingFor4KShot;
+	return GCurrentLevelEditingViewportClient != nullptr && !HighResScreenshotToolbar::bWaitingForScreenshot;
+}
+
+void FHighResScreenshotToolbarModule::RegisterSettings()
+{
+	if (ISettingsModule* SettingsModule = FModuleManager::LoadModulePtr<ISettingsModule>(TEXT("Settings")))
+	{
+		SettingsModule->RegisterSettings(
+			TEXT("Editor"),
+			TEXT("Plugins"),
+			TEXT("HighResScreenshotToolbar"),
+			LOCTEXT("SettingsName", "4K Screenshot Toolbar"),
+			LOCTEXT(
+				"SettingsDescription",
+				"Choose a capture resolution preset or enter a custom width and height."),
+			GetMutableDefault<UHighResScreenshotToolbarSettings>());
+	}
+}
+
+void FHighResScreenshotToolbarModule::UnregisterSettings()
+{
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>(TEXT("Settings")))
+	{
+		SettingsModule->UnregisterSettings(
+			TEXT("Editor"),
+			TEXT("Plugins"),
+			TEXT("HighResScreenshotToolbar"));
+	}
 }
 
 void FHighResScreenshotToolbarModule::RegisterMenus()

@@ -14,9 +14,11 @@ public:
 	virtual void ShutdownModule() override;
 
 private:
-	void Take4KScreenshot();
-	bool CanTake4KScreenshot() const;
+	void TakeScreenshot();
+	bool CanTakeScreenshot() const;
 	void RegisterMenus();
+	void RegisterSettings();
+	void UnregisterSettings();
 
 	TSharedPtr<class FUICommandList> PluginCommands;
 };
