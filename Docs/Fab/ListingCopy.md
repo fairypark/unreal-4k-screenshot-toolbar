@@ -55,6 +55,7 @@ The plugin automatically enters Game View for a clean capture, requests the high
 - Supported Unreal Engine versions:
   - Unreal Engine 5.8
   - Unreal Engine 5.7
+  - Unreal Engine 5.5
   - Unreal Engine 5.0
 - Source code included: Yes
 - Third-party dependencies: None
@@ -86,6 +87,10 @@ Initial Fab release. Verified with Unreal Engine 5.8.1 on Win64 through an indep
 ### Unreal Engine 5.7
 
 Initial Fab release. Verified with Unreal Engine 5.7.4 on Win64 through an independent package build.
+
+### Unreal Engine 5.5
+
+Initial Fab release. Verified with Unreal Engine 5.5.4 on Win64 through an independent compile and link plus an Editor plugin-load test.
 
 ### Unreal Engine 5.0
 

@@ -16,7 +16,9 @@ This release adds a hybrid preset and custom-resolution workflow while keeping
 
 - Unreal Engine 5.8.1 / Win64: independent plugin build passed
 - Unreal Engine 5.7.4 / Win64: independent plugin build passed
+- Unreal Engine 5.5.4 / Win64: independent compile/link and Editor plugin-load test passed
 - Unreal Engine 5.0.3 / Win64: independent plugin build passed
 
-Unreal Engine 5.5.4 remains unadvertised because the available local engine
-installation fails inside UnrealBuildTool before compiling the plugin module.
+The local Unreal Engine 5.5.4 installation contains an unrelated broken
+`VisualStudioTools` rules registration. Excluding that engine plugin allowed
+the stock 5.5 UnrealBuildTool to compile and link this plugin successfully.

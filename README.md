@@ -33,10 +33,13 @@ On Windows Editor, the default location is:
 | --- | --- |
 | 5.8.1 | Build verified and functionally tested |
 | 5.7.4 | Build verified |
+| 5.5.4 | Build and Editor plugin load verified |
 | 5.0.3 | Build verified |
 
-Unreal Engine 5.5.4 is not currently advertised as supported because the local
-engine installation fails inside UnrealBuildTool before plugin compilation.
+The local Unreal Engine 5.5.4 installation had an unrelated broken
+`VisualStudioTools` rules registration. With that engine plugin excluded, the
+stock 5.5 UnrealBuildTool compiled and linked this plugin successfully, and the
+Editor mounted the resulting plugin.
 
 ## Installation
 
@@ -52,9 +55,9 @@ engine installation fails inside UnrealBuildTool before plugin compilation.
 4. Enable **4K Screenshot Toolbar** in `Edit > Plugins` if it is not already enabled.
 5. Restart the editor when requested.
 
-The ready-to-install package is built for Unreal Engine 5.8 on Win64 and also
-includes the source. Users of another engine version should clone the repository
-or download GitHub's source archive and build it with a compatible C++ toolchain.
+Ready-to-install Win64 packages are built separately for each verified Unreal
+Engine version and also include the source. Use the ZIP matching your exact
+engine version.
 
 ## Usage
 

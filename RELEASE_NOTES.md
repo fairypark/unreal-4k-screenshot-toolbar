@@ -11,6 +11,7 @@ Verified independent Win64 plugin builds:
 
 - Unreal Engine 5.8.1
 - Unreal Engine 5.7.4
+- Unreal Engine 5.5.4
 - Unreal Engine 5.0.3
 
 ## 4K Screenshot Toolbar v1.0.0

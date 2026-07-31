@@ -24,9 +24,9 @@
 
 - [ ] Add Unreal Engine 5.8 / Win64 version and its direct ZIP link
 - [ ] Add Unreal Engine 5.7 / Win64 version and its direct ZIP link
+- [ ] Add Unreal Engine 5.5 / Win64 version and its direct ZIP link
 - [ ] Add Unreal Engine 5.0 / Win64 version and its direct ZIP link
 - [ ] Paste the matching Version Notes from `ListingCopy.md`
-- [ ] Do not advertise Unreal Engine 5.5 until its build blocker is resolved
 
 ## Media
 

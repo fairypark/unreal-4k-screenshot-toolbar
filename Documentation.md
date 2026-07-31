@@ -20,12 +20,13 @@ viewport state after Unreal Engine finishes processing the screenshot.
 | --- | --- |
 | 5.8.1 | Independent plugin build and functional Editor test |
 | 5.7.4 | Independent plugin build |
+| 5.5.4 | Independent plugin build and Editor plugin-load test |
 | 5.0.3 | Independent plugin build |
 
-Unreal Engine 5.5.4 is not advertised as supported because the available local
-installation fails inside UnrealBuildTool before plugin compilation. This is an
-engine/toolchain environment failure rather than a confirmed plugin source
-failure.
+The local Unreal Engine 5.5.4 installation contains a broken
+`VisualStudioTools` rules registration. Excluding that unrelated engine plugin
+allowed the stock 5.5 UnrealBuildTool to compile and link this plugin, followed
+by a successful Editor plugin-load test.
 
 ## Installation
 
