@@ -21,17 +21,19 @@ This file contains ready-to-paste listing text for the Fab publisher portal.
 
 ## Short description
 
-Capture the active Unreal Editor Level Viewport at 3840 × 2160 with one toolbar click or the configurable F12 shortcut.
+Capture the active Unreal Editor Level Viewport at a preset or custom resolution with one toolbar click or the configurable F12 shortcut.
 
 ## Long description
 
-4K Screenshot Toolbar adds a dedicated camera button to the Unreal Editor Level Editor toolbar. Click it—or press the configurable F12 shortcut—to capture the active Level Editor viewport at 3840 × 2160.
+4K Screenshot Toolbar adds a dedicated camera button to the Unreal Editor Level Editor toolbar. Choose a standard resolution preset or custom dimensions, then click the button—or press the configurable F12 shortcut—to capture the active Level Editor viewport.
 
 The plugin automatically enters Game View for a clean capture, requests the high-resolution screenshot, restores the previous viewport state, and uses Unreal Editor's existing screenshot notification. It is silent by design and does not add duplicate success popups.
 
 ### Features
 
-- One-click 3840 × 2160 capture from the active Level Editor viewport
+- One-click high-resolution capture from the active Level Editor viewport
+- Full HD, QHD, Ultrawide QHD, 4K, 5K, and 8K presets
+- Custom width and height fields from 64 to 16384 pixels
 - Configurable editor shortcut, defaulting to F12
 - Automatically enables Game View for a clean screenshot
 - Restores the previous viewport state after capture

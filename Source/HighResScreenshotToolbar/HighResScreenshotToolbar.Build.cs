@@ -23,6 +23,7 @@ public class HighResScreenshotToolbar : ModuleRules
 				"InputCore",
 				"LevelEditor",
 				"Projects",
+				"Settings",
 				"Slate",
 				"SlateCore",
 				"ToolMenus",

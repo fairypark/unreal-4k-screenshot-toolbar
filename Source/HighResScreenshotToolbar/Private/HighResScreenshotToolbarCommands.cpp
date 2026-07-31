@@ -9,7 +9,7 @@ void FHighResScreenshotToolbarCommands::RegisterCommands()
 	UI_COMMAND(
 		PluginAction,
 		"4K Shot",
-		"Capture the active Level Editor viewport at 3840 x 2160.",
+		"Capture the active Level Editor viewport at the resolution configured in Editor Preferences.",
 		EUserInterfaceActionType::Button,
 		FInputChord(EKeys::F12));
 }

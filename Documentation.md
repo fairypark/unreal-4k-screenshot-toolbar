@@ -3,7 +3,7 @@
 ## Overview
 
 4K Screenshot Toolbar is an Editor-only Unreal Engine code plugin. It captures
-the active Level Editor viewport as an exact 3840 × 2160 PNG through either the
+the active Level Editor viewport as an exact-size PNG through either the
 **4K Shot** toolbar button or the configurable **F12** shortcut.
 
 The plugin temporarily enables Game View when needed so editor icons and
@@ -86,9 +86,26 @@ To change it:
 The shortcut is registered in the Level Editor command context. It does not add
 an input binding to packaged games.
 
+## Capture resolution
+
+Open `Edit > Editor Preferences > Plugins > 4K Screenshot Toolbar` and choose:
+
+- Full HD (1920 x 1080)
+- QHD (2560 x 1440)
+- Ultrawide QHD (3440 x 1440)
+- 4K UHD (3840 x 2160), the default
+- 5K (5120 x 2880)
+- 8K UHD (7680 x 4320)
+- Custom
+
+Selecting `Custom` enables the width and height fields. Each custom dimension
+is limited to 64–16384 pixels. The setting is stored in the project's local
+Editor user settings and is used immediately by both the toolbar button and F12
+shortcut; no editor restart is required after changing it.
+
 ## Capture behavior
 
-- Output resolution: exactly 3840 × 2160
+- Output resolution: the selected preset or exact custom dimensions
 - Output format: PNG
 - Capture target: active Level Editor viewport
 - Editor icons and transform widgets: hidden through temporary Game View

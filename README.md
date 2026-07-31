@@ -3,14 +3,16 @@
 [한국어 소개](README.ko.md)
 
 A small, source-available Unreal Editor plugin that captures the active Level
-Editor viewport as an exact **3840 × 2160 PNG**. Use the **4K Shot** toolbar
-button or press **F12**.
+Editor viewport as a high-resolution PNG. Choose a standard resolution preset
+or enter a custom size, then use the **4K Shot** toolbar button or press **F12**.
 
 ![4K Shot toolbar button and F12 shortcut in Unreal Editor](Docs/Images/4k-shot-toolbar.png)
 
 ## Features
 
-- One-click 4K capture from the active Level Editor viewport
+- One-click high-resolution capture from the active Level Editor viewport
+- Full HD, QHD, Ultrawide QHD, 4K, 5K, and 8K presets
+- Custom width and height support from 64 to 16384 pixels
 - F12 default shortcut, editable in Unreal Editor's Keyboard Shortcuts
 - Temporarily enables Game View to hide editor icons and transform widgets
 - Restores the viewport state automatically after capture
@@ -38,7 +40,7 @@ engine installation fails inside UnrealBuildTool before plugin compilation.
 
 ## Installation
 
-1. Download `HighResScreenshotToolbar-v1.0.0-UE5.8-Win64.zip` from the
+1. Download the ZIP matching your engine version from the
    [latest release](https://github.com/fairypark/unreal-4k-screenshot-toolbar/releases/latest).
 2. Extract `HighResScreenshotToolbar` into your project's `Plugins` directory:
 
@@ -60,6 +62,12 @@ Activate the Level Editor viewport, then either:
 
 - click **4K Shot** on the Level Editor toolbar, or
 - press **F12**.
+
+To change the capture resolution, open
+`Edit > Editor Preferences > Plugins > 4K Screenshot Toolbar`. Select a preset,
+or choose `Custom` to enable the width and height fields. The default is
+`4K UHD (3840 x 2160)`. Changes apply to the next capture without restarting
+the editor.
 
 To change the shortcut, open `Edit > Keyboard Shortcuts` (`Ctrl+Alt+K`), search
 for `4K Shot`, and assign a different key.
