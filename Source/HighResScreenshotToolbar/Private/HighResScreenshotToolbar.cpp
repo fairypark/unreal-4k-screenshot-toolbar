@@ -6,28 +6,113 @@
 #include "HighResScreenshotToolbarStyle.h"
 
 #include "Editor.h"
+#include "Engine/Engine.h"
 #include "Framework/Notifications/NotificationManager.h"
 #include "HighResScreenshot.h"
 #include "ISettingsModule.h"
 #include "LevelEditor.h"
 #include "LevelEditorViewport.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Guid.h"
 #include "Misc/Paths.h"
 #include "Runtime/Launch/Resources/Version.h"
 #include "ToolMenus.h"
 #include "UnrealClient.h"
 #include "Widgets/Notifications/SNotificationList.h"
 
+#if PLATFORM_WINDOWS
+#include "Framework/Application/SlateApplication.h"
+#include "HAL/PlatformProcess.h"
+#include "IImageWrapper.h"
+#include "IImageWrapperModule.h"
+#include "Windows/WindowsHWrapper.h"
+#endif
+
 #define LOCTEXT_NAMESPACE "FHighResScreenshotToolbarModule"
 
 namespace HighResScreenshotToolbar
 {
-	FDelegateHandle ScreenshotCapturedHandle;
 	FDelegateHandle ScreenshotProcessedHandle;
 	bool bWaitingForScreenshot = false;
 	FString PendingScreenshotPath;
 	FLevelEditorViewportClient* PendingViewportClient = nullptr;
 	bool bChangedGameView = false;
 	bool bPreviousShowWidget = true;
+
+#if PLATFORM_WINDOWS
+	bool CopyScreenshotToClipboard(const FString& Path)
+	{
+		const void* Window = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
+		TArray64<uint8> Png;
+		if (!Window || !FFileHelper::LoadFileToArray(Png, *Path))
+		{
+			return false;
+		}
+
+		IImageWrapperModule& Images = FModuleManager::LoadModuleChecked<IImageWrapperModule>("ImageWrapper");
+		TSharedPtr<IImageWrapper> Decoder = Images.CreateImageWrapper(EImageFormat::PNG);
+		TArray64<uint8> Pixels;
+		if (!Decoder || !Decoder->SetCompressed(Png.GetData(), Png.Num()) || !Decoder->GetRaw(ERGBFormat::BGRA, 8, Pixels))
+		{
+			return false;
+		}
+		const int32 Width = Decoder->GetWidth();
+		const int32 Height = Decoder->GetHeight();
+		const SIZE_T RowBytes = SIZE_T(Width) * sizeof(FColor);
+		if (Width <= 0 || Height <= 0 || uint64(Pixels.Num()) != RowBytes * Height)
+		{
+			return false;
+		}
+		HGLOBAL Bitmap = ::GlobalAlloc(GMEM_MOVEABLE, sizeof(BITMAPINFOHEADER) + RowBytes * Height);
+		if (!Bitmap)
+		{
+			return false;
+		}
+		auto* Header = static_cast<BITMAPINFOHEADER*>(::GlobalLock(Bitmap));
+		if (!Header)
+		{
+			::GlobalFree(Bitmap);
+			return false;
+		}
+
+		*Header = {};
+		Header->biSize = sizeof(BITMAPINFOHEADER);
+		Header->biWidth = Width;
+		Header->biHeight = Height;
+		Header->biPlanes = 1;
+		Header->biBitCount = 32;
+		Header->biCompression = BI_RGB;
+		// A positive-height DIB stores BGRA rows bottom-up. The PNG decoder supplies them top-down.
+		uint8* Dest = reinterpret_cast<uint8*>(Header + 1);
+		for (int32 Y = Height - 1; Y >= 0; --Y)
+		{
+			FMemory::Memcpy(Dest, Pixels.GetData() + Y * RowBytes, RowBytes);
+			Dest += RowBytes;
+		}
+		::GlobalUnlock(Bitmap);
+
+		HWND Owner = static_cast<HWND>(const_cast<void*>(Window));
+		for (int32 Attempt = 0; Attempt < 4; ++Attempt)
+		{
+			if (Attempt > 0)
+			{
+				FPlatformProcess::SleepNoStats(0.005f);
+			}
+			if (::OpenClipboard(Owner))
+			{
+				const bool bPublished = ::EmptyClipboard() && ::SetClipboardData(CF_DIB, Bitmap) != nullptr;
+				::CloseClipboard();
+				if (bPublished)
+				{
+					return true; // Windows now owns Bitmap.
+				}
+				break;
+			}
+		}
+		::GlobalFree(Bitmap);
+		return false;
+	}
+#endif
 
 	void RestoreViewportState()
 	{
@@ -46,16 +131,6 @@ namespace HighResScreenshotToolbar
 		bPreviousShowWidget = true;
 	}
 
-	void HandleScreenshotCaptured(int32, int32, const TArray<FColor>&)
-	{
-		if (!bWaitingForScreenshot)
-		{
-			return;
-		}
-
-		PendingScreenshotPath = FPaths::ConvertRelativePathToFull(FScreenshotRequest::GetFilename());
-	}
-
 	void HandleScreenshotProcessed()
 	{
 		if (!bWaitingForScreenshot)
@@ -66,10 +141,25 @@ namespace HighResScreenshotToolbar
 		bWaitingForScreenshot = false;
 		RestoreViewportState();
 		const bool bSaved = !PendingScreenshotPath.IsEmpty() && FPaths::FileExists(PendingScreenshotPath);
+		if (GetHighResScreenshotConfig().FilenameOverride == PendingScreenshotPath)
+		{
+			GetHighResScreenshotConfig().FilenameOverride.Reset();
+		}
 
+		FText ErrorMessage;
 		if (!bSaved)
 		{
-			FNotificationInfo Info(LOCTEXT("CaptureWriteFailed", "Screenshot failed: the output file was not created."));
+			ErrorMessage = LOCTEXT("CaptureWriteFailed", "Screenshot failed: the output file was not created.");
+		}
+#if PLATFORM_WINDOWS
+		else if (!CopyScreenshotToClipboard(PendingScreenshotPath))
+		{
+			ErrorMessage = LOCTEXT("ClipboardCopyFailed", "Screenshot saved, but the image could not be copied to the clipboard.");
+		}
+#endif
+		if (!ErrorMessage.IsEmpty())
+		{
+			FNotificationInfo Info(ErrorMessage);
 			Info.bFireAndForget = true;
 			Info.ExpireDuration = 10.0f;
 			Info.bUseSuccessFailIcons = true;
@@ -86,11 +176,6 @@ namespace HighResScreenshotToolbar
 
 	void RegisterScreenshotDelegates()
 	{
-		if (!ScreenshotCapturedHandle.IsValid())
-		{
-			ScreenshotCapturedHandle = FScreenshotRequest::OnScreenshotCaptured().AddStatic(&HandleScreenshotCaptured);
-		}
-
 		if (!ScreenshotProcessedHandle.IsValid())
 		{
 			ScreenshotProcessedHandle = FScreenshotRequest::OnScreenshotRequestProcessed().AddStatic(&HandleScreenshotProcessed);
@@ -99,18 +184,16 @@ namespace HighResScreenshotToolbar
 
 	void UnregisterScreenshotDelegates()
 	{
-		if (ScreenshotCapturedHandle.IsValid())
-		{
-			FScreenshotRequest::OnScreenshotCaptured().Remove(ScreenshotCapturedHandle);
-			ScreenshotCapturedHandle.Reset();
-		}
-
 		if (ScreenshotProcessedHandle.IsValid())
 		{
 			FScreenshotRequest::OnScreenshotRequestProcessed().Remove(ScreenshotProcessedHandle);
 			ScreenshotProcessedHandle.Reset();
 		}
 
+		if (bWaitingForScreenshot && GetHighResScreenshotConfig().FilenameOverride == PendingScreenshotPath)
+		{
+			GetHighResScreenshotConfig().FilenameOverride.Reset();
+		}
 		bWaitingForScreenshot = false;
 		PendingScreenshotPath.Reset();
 		RestoreViewportState();
@@ -154,7 +237,7 @@ void FHighResScreenshotToolbarModule::ShutdownModule()
 void FHighResScreenshotToolbarModule::TakeScreenshot()
 {
 	FLevelEditorViewportClient* ViewportClient = GCurrentLevelEditingViewportClient;
-	if (ViewportClient == nullptr)
+	if (ViewportClient == nullptr || ViewportClient->Viewport == nullptr)
 	{
 		FNotificationInfo Info(LOCTEXT("NoActiveViewport", "Screenshot failed: no active Level Editor viewport."));
 		Info.ExpireDuration = 4.0f;
@@ -184,8 +267,16 @@ void FHighResScreenshotToolbarModule::TakeScreenshot()
 		return;
 	}
 
+	// Older editors do not broadcast screenshot pixels outside automation. Track the file that this request writes.
+	const FString Prefix = FPaths::ConvertRelativePathToFull(GetDefault<UEngine>()->GameScreenshotSaveDirectory.Path / TEXT("HighresScreenshot"));
+	FString& Path = HighResScreenshotToolbar::PendingScreenshotPath;
+	FFileHelper::GenerateDateTimeBasedBitmapFilename(Prefix, TEXT("png"), Path);
+	if (FPaths::FileExists(Path))
+	{
+		Path = FPaths::GetBaseFilename(Path, false) + TEXT("_") + FGuid::NewGuid().ToString() + TEXT(".png");
+	}
+	GetHighResScreenshotConfig().FilenameOverride = Path;
 	HighResScreenshotToolbar::bWaitingForScreenshot = true;
-	HighResScreenshotToolbar::PendingScreenshotPath.Reset();
 	HighResScreenshotToolbar::PendingViewportClient = ViewportClient;
 	HighResScreenshotToolbar::bChangedGameView = !ViewportClient->IsInGameView();
 #if ENGINE_MAJOR_VERSION > 5 || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1)
@@ -200,7 +291,8 @@ void FHighResScreenshotToolbarModule::TakeScreenshot()
 
 bool FHighResScreenshotToolbarModule::CanTakeScreenshot() const
 {
-	return GCurrentLevelEditingViewportClient != nullptr && !HighResScreenshotToolbar::bWaitingForScreenshot;
+	return GCurrentLevelEditingViewportClient != nullptr && GCurrentLevelEditingViewportClient->Viewport != nullptr
+		&& !HighResScreenshotToolbar::bWaitingForScreenshot;
 }
 
 void FHighResScreenshotToolbarModule::RegisterSettings()

@@ -18,10 +18,14 @@ viewport state after Unreal Engine finishes processing the screenshot.
 
 | Unreal Engine | Verification |
 | --- | --- |
+| 5.9.0 MegaJam Preview (CL 60351404) | v1.2.0 Win64 F12 capture and clipboard paste |
+| 5.8.4 (CL 58902052) | v1.2.0 Win64 F12 capture and clipboard paste |
 | 5.8.1 | Independent plugin build and functional Editor test |
 | 5.7.4 | Independent plugin build |
 | 5.5.4 | Independent plugin build and Editor plugin-load test |
 | 5.0.3 | Independent plugin build |
+
+The builds listed for 5.8.1 and earlier are from previous releases.
 
 The local Unreal Engine 5.5.4 installation contains a broken
 `VisualStudioTools` rules registration. Excluding that unrelated engine plugin
@@ -67,6 +71,7 @@ Engine version.
    - the **F12** keyboard shortcut.
 
 3. Wait for Unreal Engine's standard screenshot completion notification.
+4. On Windows, press **Ctrl+V** in a chat or other app that accepts images.
 
 On Windows Editor, screenshots are written to:
 
