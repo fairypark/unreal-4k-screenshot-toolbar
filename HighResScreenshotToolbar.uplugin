@@ -1,9 +1,9 @@
 {
 	"FileVersion": 3,
-	"Version": 10100,
-	"VersionName": "1.1.0",
+	"Version": 10200,
+	"VersionName": "1.2.0",
 	"FriendlyName": "4K Screenshot Toolbar",
-	"Description": "Capture the active Level Editor viewport at a preset or custom resolution with one click or F12.",
+	"Description": "Capture the active Level Editor viewport as a PNG with one click or F12. On Windows, the image is also copied to the clipboard.",
 	"Category": "Editor",
 	"CreatedBy": "fairypark",
 	"CreatedByURL": "https://github.com/fairypark",

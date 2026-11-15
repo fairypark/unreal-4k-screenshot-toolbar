@@ -1,5 +1,17 @@
 # Release Notes
 
+## 4K Screenshot Toolbar v1.2.0
+
+Press **F12** in the Level Editor, then **Ctrl+V** in an app that accepts images.
+The **4K Shot** toolbar button uses the same workflow. Each capture also saves
+its PNG in the project's screenshot folder. If Windows cannot copy the image,
+the editor reports the clipboard failure and keeps the PNG.
+
+Win64 downloads are available for Unreal Engine **5.9.0 MegaJam Preview (CL 60351404)** and
+**5.8.4 (CL 58902052)**. Choose the ZIP matching your editor build and
+extract the `HighResScreenshotToolbar` folder into your project's `Plugins`
+directory. Builds for UE 5.0, 5.5 and 5.7 are available in release v1.1.0.
+
 ## 4K Screenshot Toolbar v1.1.0
 
 Choose Full HD, QHD, Ultrawide QHD, 4K UHD, 5K, or 8K UHD from Editor

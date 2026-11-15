@@ -20,6 +20,7 @@ public class HighResScreenshotToolbar : ModuleRules
 			{
 				"CoreUObject",
 				"Engine",
+				"ImageWrapper",
 				"InputCore",
 				"LevelEditor",
 				"Projects",

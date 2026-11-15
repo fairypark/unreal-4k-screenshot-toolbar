@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 - 2026-11-15
+
+- Copy the captured image to the Windows clipboard after saving its PNG. Paste it into an image-aware app with Ctrl+V.
+- Add a Win64 plugin build for Unreal Engine 5.9.0 MegaJam Preview (CL 60351404).
+
 ## 1.1.0 - 2026-08-01
 
 - Added a resolution preset selector under Editor Preferences

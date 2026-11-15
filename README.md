@@ -31,10 +31,15 @@ On Windows Editor, the default location is:
 
 | Unreal Engine | Windows status |
 | --- | --- |
+| 5.9.0 MegaJam Preview (CL 60351404) | v1.2.0 F12 capture and image paste verified |
+| 5.8.4 (CL 58902052) | v1.2.0 F12 capture and image paste verified |
 | 5.8.1 | Build verified and functionally tested |
 | 5.7.4 | Build verified |
 | 5.5.4 | Build and Editor plugin load verified |
 | 5.0.3 | Build verified |
+
+The 5.8.1, 5.7.4, 5.5.4 and 5.0.3 rows describe earlier releases.
+For their Win64 packages, see [v1.1.0](https://github.com/fairypark/unreal-4k-screenshot-toolbar/releases/tag/v1.1.0).
 
 The local Unreal Engine 5.5.4 installation had an unrelated broken
 `VisualStudioTools` rules registration. With that engine plugin excluded, the
@@ -65,6 +70,9 @@ Activate the Level Editor viewport, then either:
 
 - click **4K Shot** on the Level Editor toolbar, or
 - press **F12**.
+
+On Windows, each capture also copies the image to the clipboard. Press **Ctrl+V**
+in an AI chat or another app that accepts pasted images.
 
 To change the capture resolution, open
 `Edit > Editor Preferences > Plugins > 4K Screenshot Toolbar`. Select a preset,
