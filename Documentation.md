@@ -18,6 +18,7 @@ viewport state after Unreal Engine finishes processing the screenshot.
 
 | Unreal Engine | Verification |
 | --- | --- |
+| 5.9.0 Preview 2 (CL 60738873) | v1.2.0 Win64 build and Editor module load verified. F12 capture and paste pending |
 | 5.9.0 MegaJam Preview (CL 60351404) | v1.2.0 Win64 F12 capture and clipboard paste |
 | 5.8.4 (CL 58902052) | v1.2.0 Win64 F12 capture and clipboard paste |
 | 5.8.1 | Independent plugin build and functional Editor test |

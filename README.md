@@ -31,6 +31,7 @@ On Windows Editor, the default location is:
 
 | Unreal Engine | Windows status |
 | --- | --- |
+| 5.9.0 Preview 2 (CL 60738873) | v1.2.0 Win64 build and Editor module load verified. F12 capture and paste pending |
 | 5.9.0 MegaJam Preview (CL 60351404) | v1.2.0 F12 capture and image paste verified |
 | 5.8.4 (CL 58902052) | v1.2.0 F12 capture and image paste verified |
 | 5.8.1 | Build verified and functionally tested |
